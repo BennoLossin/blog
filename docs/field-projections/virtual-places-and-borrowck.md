@@ -106,7 +106,7 @@ Examples:
 | `ArcMap<T, U>`               | `Untracked`   | `Initialized(_)`          | unchanged                |
 | `UniqueArcMap<T, U>`         | `Untracked`   | `Initialized(_)`          | `Uninitialized`          |
 | `PlaceDrop`                  | `Exclusive`   | `Initialized(_)`          | `Uninitialized`          |
-| `PlaceRead`                  | `Shared`      | `Initialized(NotPinned)`  | unchanged                |
+| `PlaceRead`                  | `Shared`      | `Initialized(_)` [^read]  | unchanged                |
 | `PlaceMove`                  | `Exclusive`   | `Initialized(NotPinned)`  | `Uninitialized`[^mov]    |
 | `PlaceWrite`                 | `Exclusive`   | `Uninitialized`           | `Initialized(NotPinned)` |
 | `PlaceInit`                  | `Exclusive`   | `Uninitialized`           | `Initialized(NotPinned)` |
@@ -130,6 +130,7 @@ A couple of notes:
 
 [^mov]: For `Copy` types, we'd of course not change the state to `Uninitialized`. But in my mind, we are not using `PlaceMove` for `Copy` types in the first place, so this only applies for types for which `PlaceRead` is insufficient.
 [^pat]: We use a pattern to specify the before state, since we can potentially accept multiple.
+[^read]: `PlaceRead` is only available for types that are `Copy`. These types cannot have a non-trivial pinning invariant in the first place, so their pinned state does not matter.
 
 ## Conclusion
 
